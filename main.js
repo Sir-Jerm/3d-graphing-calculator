@@ -855,6 +855,17 @@ function noiser()
     else noiserArray.push(randomArthemic(Math.random()*0.05, noiserArray[noiserArray.length-1]));
     return noiserArray[noiserArray.length-1];
 }
+function newCube(boundradius){
+    if(cube)
+    {
+        cube.deleteAllLines();
+        cube.deleteAllPoints();
+    }
+    let cubep = cubePoints([0, 0, 0], boundradius);
+    cube = new Cube(cubep[0], cubep[1], cubep[2], cubep[3], cubep[4], cubep[5]
+        , cubep[6], cubep[7], true, false, 'rgb(255,255,255)', 0.5
+    );
+}
 let graphing = true;
 let vectorGraph = false;
 /**@param {string} equation ex:"x+y" */
@@ -941,15 +952,10 @@ function grapherEqu(equation = 'Math.cos(x)-Math.sin(y)', boundradius = 5, adder
 
     r = new Shape(points, true, liness);
 
-    if (!cube) {
-        let cubep = cubePoints([0, 0, 0], boundradius);
-        cube = new Cube(cubep[0], cubep[1], cubep[2], cubep[3], cubep[4], cubep[5]
-            , cubep[6], cubep[7], true, false, 'rgb(255,255,255)', 0.5
-        );
-    }
-    
-    //r.rotateByPointXYZ(6.28-rX,6.28-rY,6.28-rZ,cube.center);
-    cube.rotateByPointXYZ(3.14-rX,3.14-rY,3.14-rZ,cube.center)
+    newCube(boundradius);
+
+    //r.rotateByPointXYZ(Math.PI*2-rX,Math.PI*2-rY,Math.PI*2-rZ,cube.center);
+    //cube.rotateByPointXYZ(-rX,-rY,-rZ,cube.center)
 }
 function grapherPointEqu(pointsEq, boundradius = 5, adder = 0.3) {
 
@@ -1031,14 +1037,7 @@ function grapherPointEqu(pointsEq, boundradius = 5, adder = 0.3) {
 
     r = new Shape(points, true, liness);
 
-    if (!cube) {
-        let cubep = cubePoints([0, 0, 0], boundradius);
-        cube = new Cube(cubep[0], cubep[1], cubep[2], cubep[3], cubep[4], cubep[5]
-            , cubep[6], cubep[7], true, false, 'rgb(255,255,255)', 0.5
-        );
-    }
-
-    r.rotateByPointXYZ(rX, rY, rZ, cube.center);
+    newCube(boundradius);
 }
 function rotateGraph(x, y, z) {
     rX += x; rY += y; rZ += z;
@@ -1083,6 +1082,7 @@ function vectorGraphing(equationX, equationY, equationZ) {
     }
     console.log(vector)
     r = new Shape(points, true, lines);
+    newCube(5);
 }
 //vectorGraphing('x+(sin(x-y)/10)','y+((y+z)/10)','z+((z+x)/10)');
 //grapherPointEqu("x+y,(x)*sin(-75*3.141592/180)-(x*x+y*y)*cos(-75*3.141592/180),(x*x)/10+(y*y)/10", 5, 0.2);
@@ -1090,9 +1090,8 @@ function vectorGraphing(equationX, equationY, equationZ) {
 grapherEqu('(sqrt((x**2)+(y**2)))-5');
 
 
-function randomArthemic(a,b)
-{
-    return Math.random()<0.5 ? a+b : a-b;
+function randomArthemic(a, b) {
+    return Math.random() < 0.5 ? a + b : a - b;
 }
 
 /*let points=[
