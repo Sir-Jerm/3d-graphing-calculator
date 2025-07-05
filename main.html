@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>3d Geometric Shapes</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <input style="width:600px" type="text" id="points" value="Points only">
+        <button id="enter" onclick="if(r)rotateGraph(1.57-rX,1.57-rY,1.57-rZ);
+        grapherPointEqu(document.getElementById('points').value,5,0.2)">Enter Point</button>
+        <input type="text" id="equ" value="Equation only">
+        <!--input type="text" id="radius" value="Boundradius (Number)"-->
+        <button id="enter" onclick="if(r)rotateGraph(1.57-rX,1.57-rY,1.57-rZ);
+        grapherEqu(document.getElementById('equ').value,5,0.2);
+        ">Enter Equation</button>
+        <canvas></canvas>
+        <script src="main.js" async defer></script>
+    </body>
+</html>
