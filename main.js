@@ -844,20 +844,20 @@ function replaceAlll(string, replacer, replacewith) {
 }
 
 let r;
+/**@type {Cube} */
 let cube;
-let noiserArray=[];
-function noiser()
-{
-    if(noiserArray.length===0)
-    {
-        noiserArray.push(Math.random()*0.3);
+let noiserArray = [];
+let universalEquation = '';
+let universalAdder = 0.2;
+function noiser() {
+    if (noiserArray.length === 0) {
+        noiserArray.push(Math.random() * 0.3);
     }
-    else noiserArray.push(randomArthemic(Math.random()*0.05, noiserArray[noiserArray.length-1]));
-    return noiserArray[noiserArray.length-1];
+    else noiserArray.push(randomArthemic(Math.random() * 0.05, noiserArray[noiserArray.length - 1]));
+    return noiserArray[noiserArray.length - 1];
 }
-function newCube(boundradius){
-    if(cube)
-    {
+function newCube(boundradius) {
+    if (cube) {
         cube.deleteAllLines();
         cube.deleteAllPoints();
     }
@@ -869,9 +869,10 @@ function newCube(boundradius){
 let graphing = true;
 let vectorGraph = false;
 /**@param {string} equation ex:"x+y" */
-function grapherEqu(equation = 'Math.cos(x)-Math.sin(y)', boundradius = 5, adder = 0.3) {
+function grapherEqu(equation = 'Math.cos(x)-Math.sin(y)', boundradius = 5, adder = universalAdder) {
 
     if (!graphing) return;
+    universalEquation = equation;
     equation = replaceAlll(equation, 'cos', 'Math.cos');
     equation = replaceAlll(equation, 'sin', 'Math.sin');
     equation = replaceAlll(equation, 'sqrt', 'Math.sqrt');
@@ -902,7 +903,7 @@ function grapherEqu(equation = 'Math.cos(x)-Math.sin(y)', boundradius = 5, adder
 
             let c;
             let linedisplay = true;
-
+            //console.log(equation, points)
             if (eval(equation) <= boundradius && eval(equation) >= -boundradius)
                 c = new Point([x, eval(equation), y], false, 'rgb(0,0,0)', 1)
             else {
@@ -957,9 +958,10 @@ function grapherEqu(equation = 'Math.cos(x)-Math.sin(y)', boundradius = 5, adder
     //r.rotateByPointXYZ(Math.PI*2-rX,Math.PI*2-rY,Math.PI*2-rZ,cube.center);
     //cube.rotateByPointXYZ(-rX,-rY,-rZ,cube.center)
 }
-function grapherPointEqu(pointsEq, boundradius = 5, adder = 0.3) {
+function grapherPointEqu(pointsEq, boundradius = 5, adder = universalAdder) {
 
     if (!graphing) return
+    universalEquation = pointsEq;
     pointsEq = replaceAlll(pointsEq, 'cos', 'Math.cos');
     pointsEq = replaceAlll(pointsEq, 'sin', 'Math.sin');
     pointsEq = replaceAlll(pointsEq, 'sqrt', 'Math.sqrt');
@@ -1088,6 +1090,11 @@ function vectorGraphing(equationX, equationY, equationZ) {
 //grapherPointEqu("x+y,(x)*sin(-75*3.141592/180)-(x*x+y*y)*cos(-75*3.141592/180),(x*x)/10+(y*y)/10", 5, 0.2);
 //grapherPointEqu("x,sin(noiser()),y", 5, 0.5)
 grapherEqu('(sqrt((x**2)+(y**2)))-5');
+/*wait(1000, ()=>{
+    grapherEqu('x+2', 7, 0.5);
+    universalEquation = 'x+2';
+})
+universalEquation = '(sqrt((x**2)+(y**2)))-5';*/
 
 
 function randomArthemic(a, b) {
@@ -1127,7 +1134,7 @@ addEventListener('keydown', (e) => {
 
     switch (e.key) {
         case 'w':
-            if (graphing) rotateGraph(1 / 30, 0, 0);
+            /*if (graphing) rotateGraph(1 / 30, 0, 0);
             if (vectorGraph) r.rotateByPointXYZ(1 / 30, 0, 0, r.center);
             if (graphing || vectorGraph) {
                 for (let i in allLetters) {
@@ -1137,10 +1144,11 @@ addEventListener('keydown', (e) => {
                         }
                     }
                 }
-            };
+            };*/
+            changeCameraPos([camera.pos[0],camera.pos[1],camera.pos[2]+1])
             break;
         case 's':
-            if (graphing) rotateGraph(-1 / 30, 0, 0);
+            /*if (graphing) rotateGraph(-1 / 30, 0, 0);
             if (vectorGraph) r.rotateByPointXYZ(-1 / 30, 0, 0, r.center);
             if (graphing || vectorGraph) {
                 for (let i in allLetters) {
@@ -1148,7 +1156,8 @@ addEventListener('keydown', (e) => {
                         if (allLetters[i].rotate) allLetters[i].rotateByPointXYZ(-1 / 30, 0, 0, r.center)
                     }
                 }
-            };
+            };*/
+            changeCameraPos([camera.pos[0],camera.pos[1],camera.pos[2]-1])
             break;
         case 'q':
             if (graphing) rotateGraph(0, 0, -1 / 30);
@@ -1173,7 +1182,7 @@ addEventListener('keydown', (e) => {
             };
             break;
         case 'a':
-            if (graphing) rotateGraph(0, -1 / 30, 0);
+            /*if (graphing) rotateGraph(0, -1 / 30, 0);
             if (vectorGraph) r.rotateByPointXYZ(0, -1 / 30, 0, r.center);
             if (graphing || vectorGraph) {
                 for (let i in allLetters) {
@@ -1181,10 +1190,11 @@ addEventListener('keydown', (e) => {
                         if (allLetters[i].rotate) allLetters[i].rotateByPointXYZ(0, -1 / 30, 0, r.center)
                     }
                 }
-            };
+            };*/
+            changeCameraPos([camera.pos[0]-1,camera.pos[1],camera.pos[2]])
             break;
         case 'd':
-            if (graphing) rotateGraph(0, 1 / 30, 0);
+            /*if (graphing) rotateGraph(0, 1 / 30, 0);
             if (vectorGraph) r.rotateByPointXYZ(0, 1 / 30, 0, r.center);
             if (graphing || vectorGraph) {
                 for (let i in allLetters) {
@@ -1192,7 +1202,8 @@ addEventListener('keydown', (e) => {
                         if (allLetters[i].rotate) allLetters[i].rotateByPointXYZ(0, 1 / 30, 0, r.center)
                     }
                 }
-            };
+            };*/
+            changeCameraPos([camera.pos[0]+1,camera.pos[1],camera.pos[2]])
             break;
     }
 
@@ -1233,7 +1244,7 @@ function xroot(x, y) {
 }
 
 function animate() {
-    ctx.fillStyle = 'rgb(0,0,0)';
+    ctx.fillStyle = 'rgb(25, 28, 35)';
     ctx.fillRect(0, 0, cw, ch);
     for (let i in Point.all) {
         Point.all[i].draw();
