@@ -1,0 +1,258 @@
+/*let pright = new Point([1, 2, 2], true);
+let pleft = new Point([-1, 2, 2], true);
+let ptop = new Point([0, 2, 3], true);
+let pback = new Point([0, 0, 3], true);
+
+let pointsInTreta = [pright, pleft, ptop, pback];
+
+new Line(pright, pleft,true);
+new Line(pright, ptop,true);
+new Line(pright, pback,true);
+new Line(ptop, pback,true);
+new Line(pleft, ptop,true);
+new Line(pleft, pback,true);
+
+setInterval(() => {
+    pright.changeRealPos(subtractCoords(rotateYByPoint(pright, ptop, 1 / 30), pright.posReal));
+    pleft.changeRealPos(subtractCoords(rotateYByPoint(pleft, ptop, 1 / 30), pleft.posReal));
+    pback.changeRealPos(subtractCoords(rotateYByPoint(pback, ptop, 1 / 30), pback.posReal));
+    for (let i in Line.all) {
+        delete Line.all[i];
+    }
+    for (let i = 0; i < pointsInTreta.length; i++) {
+        for (let j = 0; j < pointsInTreta.length; j++) {
+            if (pointsInTreta[j] !== pointsInTreta[i]) {
+                new Line(pointsInTreta[j], pointsInTreta[i],true);
+            }
+        }
+    }
+}, 10);
+
+let frd = new Point([1, 0, 1], true);
+let fld = new Point([-1, 0, 1], true);
+let fru = new Point([1, 0, 3], true);
+let flu = new Point([-1, 0, 3], true);
+let brd = new Point([1, 2, 1], true);
+let bld = new Point([-1, 2, 1], true);
+let bru = new Point([1, 2, 3], true);
+let blu = new Point([-1, 2, 3], true);
+let originn = new Point([0, 1, 2], true);
+
+let cube = [frd, fld, fru, flu, brd, bld, bru, blu]
+new Line(blu, bru, true);
+new Line(blu, bld, true);
+new Line(blu, flu, true);
+new Line(bru, fru, true);
+new Line(bru, brd, true);
+new Line(frd, brd, true);
+new Line(frd, fru, true);
+new Line(frd, fld, true);
+new Line(fld, bld, true);
+new Line(fld, flu, true);
+new Line(fru, flu, true);
+new Line(bld, brd, true);
+
+setInterval(() => {
+    frd.changeRealPos(subtractCoords(rotateYByPoint(frd, originn, 1 / 30), frd.posReal));
+    fld.changeRealPos(subtractCoords(rotateYByPoint(fld, originn, 1 / 30), fld.posReal));
+    fru.changeRealPos(subtractCoords(rotateYByPoint(fru, originn, 1 / 30), fru.posReal));
+    flu.changeRealPos(subtractCoords(rotateYByPoint(flu, originn, 1 / 30), flu.posReal));
+    brd.changeRealPos(subtractCoords(rotateYByPoint(brd, originn, 1 / 30), brd.posReal));
+    bld.changeRealPos(subtractCoords(rotateYByPoint(bld, originn, 1 / 30), bld.posReal));
+    bru.changeRealPos(subtractCoords(rotateYByPoint(bru, originn, 1 / 30), bru.posReal));
+    blu.changeRealPos(subtractCoords(rotateYByPoint(blu, originn, 1 / 30), blu.posReal));
+
+
+    for (let i in Line.all) {
+        delete Line.all[i];
+    }
+    new Line(blu, bru, true);
+    new Line(blu, bld, true);
+    new Line(blu, flu, true);
+    new Line(bru, fru, true);
+    new Line(bru, brd, true);
+    new Line(frd, brd, true);
+    new Line(frd, fru, true);
+    new Line(frd, fld, true);
+    new Line(fld, bld, true);
+    new Line(fld, flu, true);
+    new Line(fru, flu, true);
+    new Line(bld, brd, true);
+}, 10);
+
+new Line(pright, pleft, true);
+new Line(pright, ptop, true);
+new Line(pright, pback, true);
+new Line(ptop, pback, true);
+new Line(pleft, ptop, true);
+new Line(pother, ptop, true);
+new Line(pother, pleft, true);
+new Line(pother, pback, true)
+
+setInterval(() => {
+    pright.changeRealPos(subtractCoords(rotateYByPoint(pright, ptop, 1 / 3), pright.posReal));
+    pleft.changeRealPos(subtractCoords(rotateYByPoint(pleft, ptop, 1 / 3), pleft.posReal));
+    pback.changeRealPos(subtractCoords(rotateYByPoint(pback, ptop, 1 / 3), pback.posReal));
+    pother.changeRealPos(subtractCoords(rotateYByPoint(pother, ptop, 1 / 3), pother.posReal));
+
+    for (let i in Line.all) {
+        delete Line.all[i];
+    }
+    new Line(pright, pleft, true);
+    new Line(pright, ptop, true);
+    new Line(pright, pback, true);
+    new Line(ptop, pback, true);
+    new Line(pleft, ptop, true);
+    new Line(pother, ptop, true);
+    new Line(pother, pleft, true);
+    new Line(pother, pback, true)
+}, 100);
+
+sphere
+/*let rS=1;
+let mqx=2;
+for(let i=0;i<6.1*mqx;i++)
+{
+    for(let j=0;j<6.1*mqx;j++)
+    {
+        new Point([Math.cos(i)*Math.cos(j)*rS,Math.sin(i)*rS,Math.sin(j)*Math.cos(i)*rS],true)
+    }
+}*/
+
+/*let rig = new Point([1,2,1],false);
+let left = new Point([-1,2,1],false);
+let backleft = new Point([-1,2,3],false);
+let backrig = new Point([1,2,3],false);
+let topp = new Point([0,0,2],false);
+let bottom = new Point([0,4,2],false);
+
+let octa = new Octahedron(rig,left,topp,backleft,backrig,bottom,true,'hsl(100,100%,50%)');
+
+let rig2 = new Point([1,2,1],false);
+let left2 = new Point([-1,2,1],false);
+let backleft2 = new Point([-1,2,3],false);
+let backrig2 = new Point([1,2,3],false);
+let topp2 = new Point([0,1,2],false);
+
+let pyramid = new Pyramid(rig2,left2,topp2,backleft2,backrig2);*/
+
+
+3d philosopher stone
+
+let circle = new Sphere([0,0.5,0],0.5,true,'hsl(300,100%,30%)');
+
+let pointsee = cubePoints([0,0.5,0],0.5);
+
+let cube = new Cube(pointsee[0], pointsee[1], pointsee[2],
+pointsee[3], pointsee[4], pointsee[5], pointsee[6],
+pointsee[7], true, false, 'hsl(0,100%,50%', 2);
+
+let topp=new Point([0,-1,-0],false);
+let right=new Point([1,1,1],false);
+let backleft=new Point([-1,1,-1],false);
+let backright=new Point([1,1,-1],false);
+let left =new Point([-1,1,1],false);
+
+let pyramidd = new Pyramid(right,left,topp,backleft,backright,true,'hsl(50,100%,50%)',false,2);
+
+let circle2 = new Sphere([0,0.5,0],1.5);
+
+//console.log(circle.points);
+
+setInterval(()=>{
+    circle.rotateByPointXYZ(0.5/30,0.1/30,0/30,circle.center);
+    cube.rotateByPointXYZ(0.5/30,0.1/30,0/30,circle.center)
+    pyramidd.rotateByPointXYZ(0.5/30,0.1/30,0/30,circle.center);
+    circle2.rotateByPointXYZ(0.5/30,0.1/30,0/30,circle.center);
+},10)
+
+IDK
+/*let pointsr = cubePoints([0, 2, 2], 2);
+
+let cube1 = new Cube(pointsr[0], pointsr[1], pointsr[2],
+    pointsr[3], pointsr[4], pointsr[5], pointsr[6],
+    pointsr[7], true, false, 'hsl(50,100%,50%', 3);
+
+let pointsee = cubePoints([0, 2, 2], 1);
+
+let cube = new Cube(pointsee[0], pointsee[1], pointsee[2],
+    pointsee[3], pointsee[4], pointsee[5], pointsee[6],
+    pointsee[7], true, false, 'hsl(0,100%,50%', 2);
+
+let rig = new Point([0, 2, 1], false);
+let left = new Point([-1, 2, 2], false);
+let backleft = new Point([0, 2, 3], false);
+let backrig = new Point([1, 2, 2], false);
+let topp = new Point([0, 3, 2], false);
+let bottom = new Point([0, 1, 2], false);
+
+let octa = new Octahedron(rig, left, topp, backleft, backrig, bottom, true, 'hsl(200,100%,50%)', false, 2);
+
+let e = setInterval(() => {
+
+    //octa.rotateByPointXYZ(0 / 30, 0 / 30, -0.3 / 30, cube.center);
+    //cube.rotateByPointXYZ(0 / 30, 0 / 30, -0.3 / 30, cube.center);
+    //cube1.rotateByPointXYZ(0 / 30, 0 / 30, -0.3 / 30, cube.center);
+    /*for(let i=0;i<cube.points.length;i++)
+    {
+     console.log(cube.points[i].posReal)
+    }
+}, 10);*/
+--------------Grapher-------
+let points = [];
+let equation = 'Math.sin(x)*Math.sin(y)';
+let boundradius=5;
+let adder=0.3;
+let matrixPoints=[];
+for(let i=0;i<(boundradius*2)/adder;i++)
+{
+    matrixPoints.push([]);
+}
+console.log(matrixPoints)
+let liness=[];
+for(let x=-boundradius;x<=boundradius;x+=adder)
+{
+    for(let y=-boundradius;y<=boundradius;y+=adder)
+    {
+        if(eval(equation)<=boundradius&&eval(equation)>=-boundradius) {
+            let c=new Point([x,eval(equation),y], false)
+            points.push(c);
+            let r = Math.floor((x+boundradius)/adder);
+            if(r===Math.floor((boundradius*2)/adder)) break;
+            matrixPoints[r].push(c);
+            if(matrixPoints[r].length>1)
+            {
+                liness.push(new Line(matrixPoints[r]
+                [matrixPoints[r].length-1], matrixPoints[r]
+                [matrixPoints[r].length-2],true,'rgb(0,255,0)'));
+                if(matrixPoints[r-1])
+                {
+                    if(matrixPoints[r-1][matrixPoints[r].length-1])
+                    {
+                        liness.push(new Line(matrixPoints[r-1][matrixPoints[r].length-1], 
+                        matrixPoints[r][matrixPoints[r].length-1]
+                        ,true,'rgb(0,255,0)'));
+                    }
+                }
+            }
+        }
+    }
+}
+
+let cubep = cubePoints([0,0,0],boundradius);
+let cube = new Cube(cubep[0],cubep[1],cubep[2],cubep[3],cubep[4],cubep[5]
+    ,cubep[6],cubep[7],true,false,'rgb(255,255,255)',0.5
+);
+
+//let centerr = findCenter(points);
+let center = new Point([0,0,0], false)
+
+let r = new Shape(points, true,liness)
+
+//r.rotateByPointXYZ(0,3.14/1.5,0,center);
+//cube.rotateByPointXYZ(0,3.14/1.5,0,center);
+
+setInterval(() => {
+    r.rotateByPointXYZ(0 / 30, 1.5 / 30, 0 / 30, center);
+    cube.rotateByPointXYZ(0 / 30, 1.5 / 30, 0 / 30, center);
+}, 100)

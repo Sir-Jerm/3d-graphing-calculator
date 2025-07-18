@@ -1,0 +1,9 @@
+body{
+    margin: 0px;
+    position:absolute;
+    font-family: monospace;
+}
+canvas{
+    position: relative;
+    top: 20px;
+}

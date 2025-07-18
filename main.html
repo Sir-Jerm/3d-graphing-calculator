@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>3d Geometric Shapes</title>
+        <link rel="icon" type="image/x-icon" href="/favicon_io/favicon.ico">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div style="width:fit-content;height: auto; margin-left: 2px;">
+            <div>
+                <input style="width:50vw" type="text" id="vectors" value="Vector Equations only">
+                <button id="enter" onclick="
+                    let inputs= document.getElementById('vectors').value.split(',')
+                
+                    vectorGraphing(inputs[0], inputs[1], inputs[2], 0.5)"
+                >Enter Vector Equations</button>
+                <p>
+                    Syntax: (x-axis Equation), (y-axis equation), (z-axis equation).
+                    Ex: (x+(sin(x-y)/10)),(y+((y+z)/10)),(z+((z+x)/10)).
+                    Z is a variable
+                </p>
+            </div>
+
+            <div>
+                <input style="width:50vw" type="text" id="points" value="Points Equations only">
+                <button id="enter" onclick="
+                    grapherPointEqu(document.getElementById('points').value,max)"
+                >Enter Point Equation</button>
+                <p>
+                    Syntax: (x-axis Equation), (y-axis equation), (z-axis equation).
+                    Ex: (x+5),(y**2+x),(x+y-2).
+                    Z is not a variable
+                </p>
+            </div>
+
+            <div>
+                <input style="width:50vw" type="text" id="equ" value="Regular Equation only">
+                <!--input type="text" id="radius" value="Boundradius (Number)"-->
+                <button id="enter" onclick="
+                    grapherEqu(document.getElementById('equ').value,max);
+                ">Enter Equation</button>
+                <p>
+                    For Regular Equation use sqrt() for the Square root function. 
+                    Sin(), cos(), and tan() are in radians.
+                    Do not use equals sign. 
+                    Use x & y as variables. ** for exponetial. * for multiplication. / for division.
+
+                </p>
+                <a href="https://www.w3schools.com/js/js_math.asp" target="_blank">Use this for functions</a>
+                
+            </div>
+
+            <div>
+                <input style="width:10vw" type="text" id="boundradius" value="Length of cube">
+                <button id="enter" onclick="
+                    max=Number(document.getElementById('boundradius').value);
+                    grapherEqu(`${universalEquation}`,max);
+                   ">Enter Length</button>
+            </div>
+
+            <div>
+                <input style="width:10vw" type="text" id="adder" value="Distance between points">
+                <button id="enter" onclick="
+                    universalAdder=Number(document.getElementById('adder').value);
+                    grapherEqu(`${universalEquation}`,max);
+                ">Enter Distance</button>
+            </div>
+        </div>
+        <canvas></canvas>
+        <script src="main.js" async defer></script>
+    </body>
+</html>
