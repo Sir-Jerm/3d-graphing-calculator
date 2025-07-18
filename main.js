@@ -1090,9 +1090,9 @@ function vectorGraphing(equationX, equationY, equationZ,adder=1) {
     newCube(5);
 }
 //vectorGraphing('x+(sin(x-y)/10)','y+((y+z)/10)','z+((z+x)/10)');
-grapherPointEqu("x+y,(x)*sin(-75*3.141592/180)-(x*x+y*y)*cos(-75*3.141592/180),(x*x)/10+(y*y)/10", 5, 0.2);
+//grapherPointEqu("x+y,(x)*sin(-75*3.141592/180)-(x*x+y*y)*cos(-75*3.141592/180),(x*x)/10+(y*y)/10", 5, 0.2);
 //grapherPointEqu("x,sin(noiser()),y", 5, 0.5)
-//grapherEqu('(sqrt((x**2)+(y**2)))-5');
+grapherEqu('(sqrt((x**2)+(y**2)))-5');
 /*wait(1000, ()=>{
     grapherEqu('x+2', 7, 0.5);
     universalEquation = 'x+2';
