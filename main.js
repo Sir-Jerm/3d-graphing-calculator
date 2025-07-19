@@ -5,7 +5,7 @@ let ch = canvas.height = innerHeight;
 let cw = canvas.width = innerWidth;
 
 let camera = {
-    pos: [0, 0, -13],
+    pos: [0, 0, -10],
 }
 
 let max = 3;
@@ -217,6 +217,39 @@ class Line {
     }
 }
 
+class Triangle {
+    static all = {};
+    /**
+     * 
+     * @param {Point[]} points 
+     */
+    constructor(points, id = `${Math.random()}`) {
+        this.points = points;
+        this.id = id;
+        this.color = `hsl(${hueBasedOnheight((this.points[0].posReal[1] + this.points[1].posReal[1] + this.points[2].posReal[1]) / 3)},100%,50%)`;
+        Triangle.all[this.id] = this;
+    }
+    draw() {
+        let region = new Path2D();
+        let pointsOuttaBounds = 0;
+        for (let i = 0; i < this.points.length; i++) {
+            //if more than two points is outside bounds don't make triangle
+            if (this.points[i].extra === 2) {
+                pointsOuttaBounds++;
+                if(pointsOuttaBounds===3){
+                    region.closePath();
+                    return;
+                }
+            }
+            region.lineTo(this.points[i].posPix[0], this.points[i].posPix[1]);
+            //catch { stopAnimate(); console.log(this.points, i); break; }
+        }
+        region.closePath()
+        ctx.fillStyle = this.color;
+        ctx.fill(region);
+    }
+}
+
 /**ONLY realPoints */
 function rotateY(point, radians) {
     let x = point.posReal[0] * Math.cos(radians) + point.posReal[2] * Math.sin(radians);
@@ -300,10 +333,11 @@ function findCenter(points) {
 }
 
 class Shape {
-    constructor(points, display, lines = undefined) {
+    constructor(points, display, lines = undefined, triangles = undefined) {
         this.points = points;
         this.display = display;
         this.lines = lines;
+        this.triangles = triangles;
         if (points) this.center = new Point(findCenter(points), false);
     }
 
@@ -384,6 +418,12 @@ class Shape {
             delete Line.all[this.lines[i].id];
         }
         this.lines = [];
+    }
+    deleteAllTriangles() {
+        for (let i = 0; i < this.triangles.length; i++) {
+            delete Triangle.all[this.triangles[i].id];
+        }
+        this.triangles = [];
     }
 }
 
@@ -844,6 +884,8 @@ function replaceAlll(string, replacer, replacewith) {
 let r;
 /**@type {Cube} */
 let cube;
+/**@type {Shape} */
+let triangles;
 let noiserArray = [];
 let universalEquation = '';
 let universalAdder = 0.2;
@@ -889,67 +931,102 @@ function grapherEqu(equation = 'Math.cos(x)-Math.sin(y)', boundradius = 5, adder
         r.deleteAllLines();
         r.deleteAllPoints();
     }
+    if (triangles) {
+        triangles.deleteAllPoints();
+        triangles.deleteAllTriangles();
+    }
 
     for (let i = 0; i < (boundradius * 2) / adder; i++) {
         matrixPoints.push([]);
     }
 
     let liness = [];
+    let trianglest = [];
 
     for (let x = -boundradius; x <= boundradius; x += adder) {
         for (let y = -boundradius; y <= boundradius; y += adder) {
 
+            /**@type {Point} */
             let c;
             let linedisplay = true;
+            /**@type {Number} */
+            let output = eval(equation);
+
+            let rx = Math.floor((x + boundradius) / adder);
+            let ry = Math.floor((y + boundradius) / adder);
+
             //console.log(equation, points)
-            if (eval(equation) <= boundradius && eval(equation) >= -boundradius)
-                c = new Point([x, eval(equation), y], false, 'rgb(0,0,0)', 1)
-            else {
-                c = new Point([x, 0, y], false, 'rgb(0,0,0)', 2);
+            if (output <= boundradius && output >= -boundradius) {
+                c = new Point([x, -output, y], false, 'rgb(0,0,0)', 1);
+                
+            }
+            else if (output >= boundradius) {
+                
+                c = new Point([x, -boundradius, y], false, 'rgb(0,0,0)', 2);
+                linedisplay = false;
+            }
+            else if (output <= -boundradius) {
+                
+                c = new Point([x, boundradius, y], false, 'rgb(0,0,0)', 2);
                 linedisplay = false;
             }
 
             points.push(c);
 
-            let r = Math.floor((x + boundradius) / adder);
-            if (r === Math.floor((boundradius * 2) / adder)) break;
-            matrixPoints[r].push(c);
+            if (rx === Math.floor((boundradius * 2) / adder)) break;
+            matrixPoints[rx].push(c);
 
+            if (rx === 0) break;
+            let p1 = matrixPoints[rx - 1][ry + 1];
+            let p2 = matrixPoints[rx - 1][ry];
+            let p3 = matrixPoints[rx][ry - 1];
+
+            if (p1) trianglest.push(new Triangle([p2, p1, c]));
+            if (p3 && p2 ) {
+                trianglest.push(new Triangle([p3, p2, c]));
+            }
+
+            
             //if this is not the first point graphed make a line
-            if (matrixPoints[r].length > 1) {
+            if (matrixPoints[rx].length > 1) {
                 //if the point is in boundary add a line to it
-                if (matrixPoints[r][matrixPoints[r].length - 2].extra === 1) {
+                if (matrixPoints[rx][matrixPoints[rx].length - 2].extra === 1) {
 
                     liness.push(new Line(
-                        matrixPoints[r][matrixPoints[r].length - 1],
-                        matrixPoints[r][matrixPoints[r].length - 2],
+                        matrixPoints[rx][matrixPoints[rx].length - 1],
+                        matrixPoints[rx][matrixPoints[rx].length - 2],
                         linedisplay, 'rgb(0,255,0)',
                     ));
 
                 }
             }
+            
+            
 
             //if this is not the first array add a line to a point
-            if (matrixPoints[r - 1]) {
+            if (matrixPoints[rx - 1]) {
                 //and if the point exists add a line to it
-                if (matrixPoints[r - 1][matrixPoints[r].length - 1]) {
+                if (matrixPoints[rx - 1][matrixPoints[rx].length - 1]) {
                     //and if the point is in the boundary add a line to it
-                    if (matrixPoints[r - 1][matrixPoints[r].length - 1].extra === 1) {
+                    if (matrixPoints[rx - 1][matrixPoints[rx].length - 1].extra === 1) {
 
                         liness.push(new Line(
-                            matrixPoints[r - 1][matrixPoints[r].length - 1],
-                            matrixPoints[r][matrixPoints[r].length - 1],
+                            matrixPoints[rx - 1][matrixPoints[rx].length - 1],
+                            matrixPoints[rx][matrixPoints[rx].length - 1],
                             linedisplay, 'rgb(0,255,0)',
                         ));
 
                     }
                 }
             }
+            
 
         }
     }
 
     r = new Shape(points, true, liness);
+
+    triangles = new Shape(points, true, undefined, trianglest);
 
     newCube(boundradius);
 
@@ -972,6 +1049,10 @@ function grapherPointEqu(pointsEq, boundradius = 5, adder = universalAdder) {
         r.deleteAllLines();
         r.deleteAllPoints();
     }
+    if (triangles) {
+        triangles.deleteAllPoints();
+        triangles.deleteAllTriangles();
+    }
 
     let points = [];
     let matrixPoints = [];
@@ -981,6 +1062,7 @@ function grapherPointEqu(pointsEq, boundradius = 5, adder = universalAdder) {
     }
 
     let liness = [];
+    let trianglest = [];
 
     for (let x = -boundradius; x <= boundradius; x += adder) {
         for (let y = -boundradius; y <= boundradius; y += adder) {
@@ -988,27 +1070,41 @@ function grapherPointEqu(pointsEq, boundradius = 5, adder = universalAdder) {
             let c;
             let linedisplay = true;
 
-            //if (eval(equation) <= boundradius && eval(equation) >= -boundradius) 
-            c = new Point([eval(pointsEq[0]), eval(pointsEq[1]), eval(pointsEq[2])], false, 'rgb(0,0,0)', 1)
-            //else {
-            //    c = new Point([x, 0, y], false, 'rgb(0,0,0)', 2);
-            //    linedisplay = false;
-            //}
+            let outputs = [eval(pointsEq[0]), -eval(pointsEq[1]), eval(pointsEq[2])]
+            if(Math.abs(outputs[0]) > boundradius || Math.abs(outputs[1]) > boundradius || Math.abs(outputs[2]) > boundradius) 
+                c = new Point(outputs, false, 'rgb(0,0,0)', 2);
+            else c = new Point(outputs, false, 'rgb(0,0,0)', 1);
 
             points.push(c);
 
-            let r = Math.floor((x + boundradius) / adder);
-            if (r === Math.floor((boundradius * 2) / adder)) break;
-            matrixPoints[r].push(c);
+            let rx = Math.floor((x + boundradius) / adder);
+            let ry = Math.floor((y + boundradius) / adder);
 
+            if (rx === Math.floor((boundradius * 2) / adder)) break;
+            matrixPoints[rx].push(c);
+
+            if (rx === Math.floor((boundradius * 2) / adder)) break;
+            matrixPoints[rx].push(c);
+
+            if (rx === 0) break;
+            let p1 = matrixPoints[rx - 1][ry + 1];
+            let p2 = matrixPoints[rx - 1][ry];
+            let p3 = matrixPoints[rx][ry - 1];
+
+            if (p1) trianglest.push(new Triangle([p2, p1, c]));
+            if (p3 && p2 ) {
+                trianglest.push(new Triangle([p3, p2, c]));
+            }
+
+            /*
             //if this is not the first point graphed make a line
-            if (matrixPoints[r].length > 1) {
+            if (matrixPoints[rx].length > 1) {
                 //if the point is in boundary add a line to it
-                if (matrixPoints[r][matrixPoints[r].length - 2].extra === 1) {
+                if (matrixPoints[rx][matrixPoints[rx].length - 2].extra === 1) {
 
                     liness.push(new Line(
-                        matrixPoints[r][matrixPoints[r].length - 1],
-                        matrixPoints[r][matrixPoints[r].length - 2],
+                        matrixPoints[rx][matrixPoints[rx].length - 1],
+                        matrixPoints[rx][matrixPoints[rx].length - 2],
                         linedisplay, 'rgb(0,255,0)',
                     ));
 
@@ -1016,26 +1112,28 @@ function grapherPointEqu(pointsEq, boundradius = 5, adder = universalAdder) {
             }
 
             //if this is not the first array add a line to a point
-            if (matrixPoints[r - 1]) {
+            if (matrixPoints[rx - 1]) {
                 //and if the point exists add a line to it
-                if (matrixPoints[r - 1][matrixPoints[r].length - 1]) {
+                if (matrixPoints[rx - 1][matrixPoints[rx].length - 1]) {
                     //and if the point is in the boundary add a line to it
-                    if (matrixPoints[r - 1][matrixPoints[r].length - 1].extra === 1) {
+                    if (matrixPoints[rx - 1][matrixPoints[rx].length - 1].extra === 1) {
 
                         liness.push(new Line(
-                            matrixPoints[r - 1][matrixPoints[r].length - 1],
-                            matrixPoints[r][matrixPoints[r].length - 1],
+                            matrixPoints[rx - 1][matrixPoints[rx].length - 1],
+                            matrixPoints[rx][matrixPoints[rx].length - 1],
                             linedisplay, 'rgb(0,255,0)',
                         ));
 
                     }
                 }
-            }
+            }*/
 
         }
     }
 
     r = new Shape(points, true, liness);
+
+    triangles = new Shape(points, true, undefined, trianglest);
 
     newCube(boundradius);
 }
@@ -1047,7 +1145,7 @@ function rotateGraph(x, y, z) {
 
 let rX = 0; let rY = 0; let rZ = 0;
 
-function vectorGraphing(equationX, equationY, equationZ,adder=1) {
+function vectorGraphing(equationX, equationY, equationZ, adder = 1) {
     //if (!vectorGraph) return;
 
     equationX = replaceAlll(equationX, 'cos', 'Math.cos');
@@ -1092,7 +1190,8 @@ function vectorGraphing(equationX, equationY, equationZ,adder=1) {
 //vectorGraphing('x+(sin(x-y)/10)','y+((y+z)/10)','z+((z+x)/10)');
 //grapherPointEqu("x+y,(x)*sin(-75*3.141592/180)-(x*x+y*y)*cos(-75*3.141592/180),(x*x)/10+(y*y)/10", 5, 0.2);
 //grapherPointEqu("x,sin(noiser()),y", 5, 0.5)
-grapherEqu('(sqrt((x**2)+(y**2)))-5');
+//grapherEqu('(sqrt((x**2)+(y**2)))-5');
+grapherEqu('x**2 + y**2 - 5')
 /*wait(1000, ()=>{
     grapherEqu('x+2', 7, 0.5);
     universalEquation = 'x+2';
@@ -1148,7 +1247,7 @@ addEventListener('keydown', (e) => {
                     }
                 }
             };*/
-            changeCameraPos([camera.pos[0],camera.pos[1],camera.pos[2]+1])
+            changeCameraPos([camera.pos[0], camera.pos[1], camera.pos[2] + 1])
             break;
         case 's':
             /*if (graphing) rotateGraph(-1 / 30, 0, 0);
@@ -1160,7 +1259,7 @@ addEventListener('keydown', (e) => {
                     }
                 }
             };*/
-            changeCameraPos([camera.pos[0],camera.pos[1],camera.pos[2]-1])
+            changeCameraPos([camera.pos[0], camera.pos[1], camera.pos[2] - 1])
             break;
         case 'q':
             if (graphing) rotateGraph(0, 0, -1 / 30);
@@ -1194,7 +1293,7 @@ addEventListener('keydown', (e) => {
                     }
                 }
             };*/
-            changeCameraPos([camera.pos[0]-1,camera.pos[1],camera.pos[2]])
+            changeCameraPos([camera.pos[0] - 1, camera.pos[1], camera.pos[2]])
             break;
         case 'd':
             /*if (graphing) rotateGraph(0, 1 / 30, 0);
@@ -1206,7 +1305,13 @@ addEventListener('keydown', (e) => {
                     }
                 }
             };*/
-            changeCameraPos([camera.pos[0]+1,camera.pos[1],camera.pos[2]])
+            changeCameraPos([camera.pos[0] + 1, camera.pos[1], camera.pos[2]])
+            break;
+        case 'ArrowDown':
+            changeCameraPos([camera.pos[0], camera.pos[1] + 1, camera.pos[2]])
+            break;
+        case 'ArrowUp':
+            changeCameraPos([camera.pos[0], camera.pos[1] - 1, camera.pos[2]])
             break;
     }
 
@@ -1256,8 +1361,15 @@ function animate() {
     for (let i in Line.all) {
         Line.all[i].draw();
     }
+    for (let i in Triangle.all) {
+        Triangle.all[i].draw()
+    }
 }
 
 //sqrt(((x*x)+((x**2)**2))/((Math.tan(Math.atan((x**2)/x)+90)**2)+1)),y, -Math.tan(Math.atan((x**2)/x)+90)*sqrt(((x*x)+((x**2)**2))/((Math.tan(Math.atan((x**2)/x)+90)**2)+1))
 
-setInterval(animate, 10);
+let animation = setInterval(animate, 10);
+
+function stopAnimate() {
+    clearInterval(animation);
+}sqrt(((x*x)+((x**2)**2))/((Math.tan(Math.atan((x**2)/x)+90)**2)+1)),y, -Math.tan(Math.atan((x**2)/x)+90)*sqrt(((x*x)+((x**2)**2))/((Math.tan(Math.atan((x**2)/x)+90)**2)+1))
